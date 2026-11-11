@@ -75,7 +75,7 @@ func (f *safePageFetcher) Fetch(parent context.Context, rawURL string) (string, 
 		return "", errors.New("page request could not be created")
 	}
 	request.Header.Set("Accept", "text/html,application/xhtml+xml,text/plain;q=0.9")
-	request.Header.Set("User-Agent", "NexusResearch/1.0 (+https://github.com/ljcatherine/Nexus)")
+	request.Header.Set("User-Agent", "NexusResearch/1.0 (+https://github.com/ljcatherine/NexusiOS)")
 	response, err := f.client.Do(request)
 	if err != nil {
 		return "", errors.New("page host unavailable")

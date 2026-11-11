@@ -1,4 +1,4 @@
-module github.com/ljcatherine/Nexus/gateway
+module github.com/ljcatherine/NexusiOS/gateway
 
 go 1.25.0
 

@@ -1,3 +1,3 @@
-module github.com/ljcatherine/Nexus/workspace-agent
+module github.com/ljcatherine/NexusiOS/workspace-agent
 
 go 1.22

@@ -12,7 +12,7 @@ A native SwiftUI app for iPhone and iPad: SSH terminals, files, services, host h
 [![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-0B1430?style=flat-square&labelColor=070C18)](App)
 [![Built with xtool](https://img.shields.io/badge/built%20with-xtool%20on%20NixOS-0B1430?style=flat-square&logo=nixos&logoColor=9CBCFF&labelColor=070C18)](docs/BUILDING.md)
 
-[**Latest build**](https://github.com/ljcatherine/Nexus/releases/latest) ·
+[**Latest build**](https://github.com/ljcatherine/NexusiOS/releases/latest) ·
 [Docs](docs/README.md) ·
 [Building](docs/BUILDING.md) ·
 [Configuration](docs/CONFIGURATION.md) ·
@@ -39,7 +39,7 @@ Minecraft actions go through the existing panel; Nexus has no separate RCON impl
 
 ## Install a build
 
-Each [release](https://github.com/ljcatherine/Nexus/releases) contains:
+Each [release](https://github.com/ljcatherine/NexusiOS/releases) contains:
 
 | Asset | What it is |
 |---|---|

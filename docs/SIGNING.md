@@ -11,7 +11,7 @@ identifier makes a separate app with its own Keychain items and settings.
 ## Steps
 
 1. Download `Nexus-v<version>-build.<n>-unsigned.ipa` from
-   [Releases](https://github.com/ljcatherine/Nexus/releases) and check it against the
+   [Releases](https://github.com/ljcatherine/NexusiOS/releases) and check it against the
    `.sha256` file, or build it with `./scripts/xtool-build.sh --release --ipa`.
 2. Sign it with a trusted signer and a matching provisioning profile. Check that the
    signed app keeps the bundle identifier you expect; some signing services replace

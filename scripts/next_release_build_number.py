@@ -15,6 +15,12 @@ if __name__ == "__main__":
     import json
     import sys
 
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--minimum-build", type=int, default=1,
+                        help="lowest allowed build number, e.g. CURRENT_PROJECT_VERSION from project.yml")
+    args = parser.parse_args()
     releases = json.load(sys.stdin)
     names = [item["tagName"] for item in releases]
-    print(next_build_number(names))
+    print(next_build_number(names, args.minimum_build))

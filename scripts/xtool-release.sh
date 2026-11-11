@@ -4,7 +4,7 @@ set -euo pipefail
 repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
-repo="${NEXUS_GITHUB_REPO:-ljcatherine/Nexus}"
+repo="${NEXUS_GITHUB_REPO:-ljcatherine/NexusiOS}"
 project_version="$(sed -n 's/^    MARKETING_VERSION: *//p' project.yml | head -n 1)"
 if [[ ! "$project_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "Invalid MARKETING_VERSION in project.yml: $project_version" >&2
@@ -37,7 +37,10 @@ if [[ -n "$(git status --porcelain -- "${build_inputs[@]}")" ]]; then
 fi
 
 release_json="$(gh release list --repo "$repo" --limit 1000 --json tagName)"
-build_number="$(printf '%s' "$release_json" | python3 scripts/next_release_build_number.py)"
+# Build numbers keep increasing across the earlier private repository's releases;
+# CURRENT_PROJECT_VERSION in project.yml is the floor.
+minimum_build="$(sed -n 's/^    CURRENT_PROJECT_VERSION: *//p' project.yml | head -n 1)"
+build_number="$(printf '%s' "$release_json" | python3 scripts/next_release_build_number.py --minimum-build "${minimum_build:-1}")"
 version_args=(--project-version "$project_version")
 if [[ "${NEXUS_ALLOW_VERSION_LINE_CHANGE:-0}" == "1" ]]; then
   version_args+=(--allow-version-line-change)
