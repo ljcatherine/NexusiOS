@@ -1,0 +1,115 @@
+diff --git a/ps5/app/model_plan.hpp b/ps5/app/model_plan.hpp
+--- a/ps5/app/model_plan.hpp
++++ b/ps5/app/model_plan.hpp
+@@ -11,6 +11,7 @@
+ #pragma once
+ 
+ #include <cstdint>
++#include <optional>
+ #include <string>
+ #include <vector>
+ 
+@@ -22,6 +23,7 @@
+     std::string name;   // general.name, or the file name
+     std::string arch;   // general.architecture
+     uint64_t    file_bytes      = 0;
++    std::optional<uint32_t> file_type; // canonical general.file_type, never inferred from name
+     uint32_t    n_layer         = 0;
+     uint32_t    n_head_kv       = 0;
+     uint32_t    key_length      = 0;   // per KV head
+diff --git a/ps5/app/model_plan.cpp b/ps5/app/model_plan.cpp
+--- a/ps5/app/model_plan.cpp
++++ b/ps5/app/model_plan.cpp
+@@ -171,9 +171,32 @@
+ 
+     std::map<std::string, uint64_t> ints;  // every scalar, and the largest element of numeric arrays
+     std::map<std::string, std::string> strs;
++    std::optional<uint32_t> file_type;
++    bool file_type_seen = false;
+     for (uint64_t i = 0; i < n_kv && !r.bad; i++) {
+         const std::string key = r.str();
+         const uint32_t    t   = r.get<uint32_t>();
++        if (key == "general.file_type") {
++            const bool duplicate = file_type_seen;
++            file_type_seen = true;
++            file_type.reset();
++            if (t == U32) {
++                const uint32_t value = r.get<uint32_t>();
++                // llama's 1024 denotes guessed/unspecified, not measured metadata.
++                if (!duplicate && value != 1024) file_type = value;
++                continue;
++            }
++            if (const uint64_t bytes = scalar_size(t)) {
++                r.skip(bytes); // Never cast malformed float/negative metadata to an integer.
++                continue;
++            }
++            if (t != STRING) {
++                r.bad = true; // Arrays/unknown types are invalid here; never numerically coerce them.
++                continue;
++            }
++            // A noncanonical string can be consumed by the existing bounded
++            // string reader, but never supplies quantization metadata.
++        }
+         if (t == STRING) {
+             strs[key] = r.str();
+         } else if (t == ARRAY) {
+@@ -196,10 +219,11 @@
+             ints[key] = read_int(r, t);
+         }
+     }
+-    if (f) {
+-        std::fseek(f, 0, SEEK_END);
+-    }
+-    m.file_bytes = file_bytes ? file_bytes : f ? (uint64_t) std::ftell(f) : r.size;
++    long measured_bytes = -1;
++    if (f && std::fseek(f, 0, SEEK_END) == 0) {
++        measured_bytes = std::ftell(f);
++    }
++    m.file_bytes = file_bytes ? file_bytes : f ? (measured_bytes >= 0 ? (uint64_t) measured_bytes : 0) : r.size;
+     if (f) {
+         std::fclose(f);
+     }
+@@ -208,6 +232,11 @@
+         return m;
+     }
+ 
++    if (f && !file_bytes && measured_bytes < 0) {
++        m.error = "file size unavailable";
++        return m; // No optimistic zero-byte memory plan after a failed seek.
++    }
++    m.file_type = file_type;
+     m.arch = strs["general.architecture"];
+     if (!strs["general.name"].empty()) {
+         m.name = strs["general.name"];
+diff --git a/ps5/app/stats.hpp b/ps5/app/stats.hpp
+--- a/ps5/app/stats.hpp
++++ b/ps5/app/stats.hpp
+@@ -12,6 +12,7 @@
+ 
+ #include <cstdint>
+ #include <mutex>
++#include <optional>
+ #include <string>
+ #include <utility>
+ #include <vector>
+@@ -34,6 +35,8 @@
+     std::string plan;   // the planner's line ("64k context, q8_0 cache: 9.9 of 11.0 GiB")
+     std::string preset;     // the preset that filled its sampling ("Qwen 3.8"), or empty
+     double      size_gib = 0;
++    uint64_t    file_bytes = 0; // measured whole-file size; 0 means unavailable
++    std::optional<uint32_t> file_type; // GGUF general.file_type, not per-tensor precision
+     bool        fits     = false;
+     bool        current  = false;
+     std::string drive;  // the Drive's name it is on; every drive loads alike
+diff --git a/ps5/app/main.cpp b/ps5/app/main.cpp
+--- a/ps5/app/main.cpp
++++ b/ps5/app/main.cpp
+@@ -733,6 +733,8 @@
+             row.file = path;
+             row.label = base_name(path);
+             row.drive = drive_name(path);
++            row.file_bytes = m.file_bytes;
++            row.file_type = m.file_type;
+             if (!m.ok) {
+                 row.plan = m.error;
+                 rows.push_back(row);

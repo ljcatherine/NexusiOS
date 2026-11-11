@@ -1,0 +1,2 @@
+# Keep imported upstream Swift sources byte-for-byte apart from documented Nexus patches.
+Vendor/** whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

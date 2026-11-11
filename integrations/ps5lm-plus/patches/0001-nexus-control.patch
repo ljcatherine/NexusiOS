@@ -1,0 +1,45 @@
+diff --git a/ps5/app/main.cpp b/ps5/app/main.cpp
+index 3c5e2fa..c526319 100644
+--- a/ps5/app/main.cpp
++++ b/ps5/app/main.cpp
+@@ -50,0 +51 @@
++#include "nexus_control.hpp"
+@@ -931,0 +933,9 @@ int main(int, char **) {
++    // Management stays disabled until a strong token's SHA-256 digest has
++    // been provisioned in a private owned file. A second opt-in marker is
++    // needed to listen on the LAN instead of loopback.
++    NexusControl nexus;
++    const bool nexus_lan = access((kDir + "/nexus-control.lan").c_str(), F_OK) == 0;
++    if (nexus.start(kDir + "/nexus-control.token", nexus_lan)) {
++        std::printf("ps5lm-app: Nexus control listening on %s:8082\n",
++                    nexus_lan ? "private LAN" : "loopback");
++    }
+@@ -1022,0 +1033,3 @@ int main(int, char **) {
++        if (n % 30 == 0) {
++            nexus.publish(live, models.rows);
++        }
+@@ -1129,0 +1143,7 @@ int main(int, char **) {
++            // On a successful LoadExec the process is replaced and never
++            // returns. A failed restart must not leave the control API stuck
++            // reporting `switching` and rejecting every subsequent request.
++            nexus.mark_restart_failed();
++            restart_at = 0;
++            dash.set_busy("");
++            stats.set_state(ServerState::failed);
+@@ -1132,0 +1153,7 @@ int main(int, char **) {
++        if (req.kind == Dashboard::Request::none) {
++            if (auto remote_model = nexus.take_request()) {
++                req = *remote_model == "none"
++                    ? Dashboard::Request{ Dashboard::Request::unload, "" }
++                    : Dashboard::Request{ Dashboard::Request::load, *remote_model };
++            }
++        }
+diff --git a/scripts/build-app.sh b/scripts/build-app.sh
+index 22b683f..bc5c545 100755
+--- a/scripts/build-app.sh
++++ b/scripts/build-app.sh
+@@ -87,0 +88 @@ cxx -std=c++20 -fexceptions -fcxx-exceptions -frtti -I "$headers/include" -I "$l
++cxx -std=c++20 -fexceptions -fcxx-exceptions -I "$llama/vendor" -c "$root/ps5/app/nexus_control.cpp" -o "$obj/nexus_control.o"
+@@ -182 +183 @@ mapfile -t libs < <(find "$out/llama" -name '*.a' | sort)
+-    "$obj/app_crt.o" "$obj/app_cpp_runtime.o" "$obj/main.o" "$obj/display.o" "$obj/model_plan.o" "$obj/settings.o" "$obj/fetch.o" "$obj/market.o" "$obj/sha256.o" "$obj/dashboard.o" "$obj/stats.o" \
++    "$obj/app_crt.o" "$obj/app_cpp_runtime.o" "$obj/main.o" "$obj/nexus_control.o" "$obj/display.o" "$obj/model_plan.o" "$obj/settings.o" "$obj/fetch.o" "$obj/market.o" "$obj/sha256.o" "$obj/dashboard.o" "$obj/stats.o" \

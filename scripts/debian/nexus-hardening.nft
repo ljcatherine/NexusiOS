@@ -1,0 +1,33 @@
+#!/usr/sbin/nft -f
+# Inbound firewall for the Debian server. It uses its own table, so it can be
+# removed without touching any other ruleset. Outbound traffic is unaffected.
+
+table inet nexus_hardening {}
+delete table inet nexus_hardening
+
+table inet nexus_hardening {
+    chain input {
+        type filter hook input priority filter; policy drop;
+
+        iif "lo" accept
+        ct state established,related accept
+        ct state invalid drop
+
+        # RCON is only for local tools, even from trusted networks.
+        tcp dport { 25575, 25576 } drop
+
+        iifname "tailscale0" accept
+        udp dport 41641 accept
+
+        meta l4proto { icmp, ipv6-icmp } accept
+        udp sport 67 udp dport 68 accept
+        ip6 saddr fe80::/10 udp dport 546 accept
+
+        # Minecraft is forwarded over IPv4 only.
+        meta nfproto ipv4 meta l4proto { tcp, udp } th dport { 25565, 25566 } accept
+
+        # Home network: SSH, FTP and its passive ports, KDE Connect, mDNS.
+        ip saddr 192.168.0.0/22 accept
+        ip6 saddr { fe80::/10, fdab:1170:ddb2:1::/64, fd7a:b72d:2cdf:c790::/64 } accept
+    }
+}

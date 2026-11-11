@@ -1,0 +1,5 @@
+.env
+.env.*
+!.env.example
+nexus-workspace-agent
+coverage.out

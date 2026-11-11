@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Copy to the ignored local/deployment.plist and replace every example value.
+  scripts/xtool-build.sh merges it into the app's Info.plist for that build only.
+  Every key is optional; leave one out to skip that preconfiguration.
+  None of these values is a secret, but they identify your deployment, so keep
+  the real file out of Git.
+-->
+<plist version="1.0">
+<dict>
+	<key>NexusGatewayHost</key>
+	<string>nexus-gateway.example.workers.dev</string>
+	<key>NexusAccessIssuer</key>
+	<string>https://your-team.cloudflareaccess.com</string>
+	<key>NexusAccessClientID</key>
+	<string>00000000-0000-0000-0000-000000000000</string>
+	<key>NexusDefaultAIEndpoint</key>
+	<string>http://192.0.2.20:8081/v1</string>
+	<key>NexusRelayDevices</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Workstation</string>
+			<key>username</key>
+			<string>user</string>
+			<key>target</key>
+			<string>nixos</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Home Server</string>
+			<key>username</key>
+			<string>server</string>
+			<key>target</key>
+			<string>debian</string>
+		</dict>
+	</array>
+</dict>
+</plist>

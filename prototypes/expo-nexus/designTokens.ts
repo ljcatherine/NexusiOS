@@ -1,0 +1,46 @@
+/** Visual approximation of App/NexusDesignSystem.swift for the separate Expo mock. */
+export const nexusTokens = {
+  color: {
+    background: '#090B10',
+    surface: '#171A22',
+    raised: '#20242E',
+    separator: '#2B303B',
+    text: '#F3F5F8',
+    muted: '#929AA8',
+    accent: '#48C6E8',
+    positive: '#5CD6A0',
+    caution: '#F3B95F',
+    critical: '#F07878',
+  },
+  lightColor: {
+    background: '#F2F2F7',
+    surface: '#FFFFFF',
+    raised: '#E8E8ED',
+    separator: '#D1D1D6',
+    text: '#17171A',
+    muted: '#686872',
+    accent: '#007A99',
+    positive: '#18794E',
+    caution: '#9A5B00',
+    critical: '#C62828',
+  },
+  spacing: {
+    compact: 8,
+    standard: 12,
+    section: 16,
+    card: 16,
+    screen: 18,
+    header: 22,
+  },
+  radius: {
+    control: 12,
+    card: 20,
+    pill: 99,
+  },
+  type: {
+    caption: 12,
+    body: 15,
+    heading: 17,
+    screenTitle: 30,
+  },
+} as const;

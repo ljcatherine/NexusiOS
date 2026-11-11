@@ -1,0 +1,89 @@
+name: Nexus
+options:
+  bundleIdPrefix: com.ljcatherine
+  deploymentTarget:
+    iOS: '17.0'
+packages:
+  NexusKit:
+    path: .
+  SwiftTerm:
+    path: Vendor/SwiftTerm
+  ExyteGrid:
+    url: https://github.com/exyte/Grid.git
+    exactVersion: 1.5.4
+  ScalingHeaderScrollView:
+    url: https://github.com/exyte/ScalingHeaderScrollView.git
+    revision: f328af2bcfda8308aa9564dac47babdf01ef7947
+  FluidGradient:
+    url: https://github.com/Cindori/FluidGradient.git
+    exactVersion: 1.0.0
+  SwiftUI-Shimmer:
+    url: https://github.com/markiv/SwiftUI-Shimmer.git
+    exactVersion: 1.5.1
+  AnimatedTabBar:
+    url: https://github.com/exyte/AnimatedTabBar.git
+    exactVersion: 1.0.1
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 148
+targets:
+  Nexus:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+        excludes: [PrivacyInfo.xcprivacy]
+    resources:
+      - path: App/PrivacyInfo.xcprivacy
+    dependencies:
+      - package: NexusKit
+        product: NexusCore
+      - package: NexusKit
+        product: NexusSSH
+      - package: SwiftTerm
+      - package: ExyteGrid
+        product: ExyteGrid
+      - package: ScalingHeaderScrollView
+      - package: FluidGradient
+      - package: SwiftUI-Shimmer
+        product: Shimmer
+      - package: AnimatedTabBar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ljcatherine.Nexus
+        OTHER_LDFLAGS: $(inherited) -all_load
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: '1,2'
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Nexus
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: Nexus uses your local network to connect to saved SSH devices, discover SSH services, and reach AI endpoints you configure.
+        INFOPLIST_KEY_NSFaceIDUsageDescription: Unlock your saved infrastructure credentials and terminal sessions.
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+    info:
+      path: Config/Nexus-Info.plist
+      properties:
+        CFBundleURLTypes:
+          - CFBundleURLName: com.ljcatherine.Nexus.oauth2
+            CFBundleURLSchemes:
+              - com.ljcatherine.Nexus
+        NSBonjourServices:
+          - _ssh._tcp
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+  NexusUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: Nexus
+schemes:
+  Nexus:
+    build:
+      targets:
+        Nexus: all
+    test:
+      targets: [NexusUITests]
