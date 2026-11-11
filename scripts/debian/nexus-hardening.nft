@@ -28,6 +28,6 @@ table inet nexus_hardening {
 
         # Home network: SSH, FTP and its passive ports, KDE Connect, mDNS.
         ip saddr 192.168.0.0/22 accept
-        ip6 saddr { fe80::/10, fdab:1170:ddb2:1::/64, fd7a:b72d:2cdf:c790::/64 } accept
+        ip6 saddr { fe80::/10, fd00::/8 } accept
     }
 }

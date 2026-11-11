@@ -20,7 +20,7 @@ ip link add wlo1 type veth peer name peer0
 ip addr add 192.168.1.60/22 dev wlo1
 ip addr add 203.0.113.1/24 dev wlo1
 ip -6 addr add 2001:db8:1::1/64 dev wlo1 nodad
-ip -6 addr add fdab:1170:ddb2:1::1/64 dev wlo1 nodad
+ip -6 addr add fd00:db8:1::1/64 dev wlo1 nodad
 ip link set wlo1 up
 ip link add tailscale0 type veth peer name peer1
 ip addr add 100.64.10.1/24 dev tailscale0
@@ -91,8 +91,8 @@ use("peer0", "2001:db8:1::9/64")
 for port, name in ((22, "SSH"), (25575, "RCON"), (25565, "Minecraft")):
     check(f"internet IPv6 {name}", connect("2001:db8:1::9", "2001:db8:1::1", port, socket.AF_INET6), "blocked")
 
-use("peer0", "fdab:1170:ddb2:1::9/64")
-check("LAN IPv6 SSH", connect("fdab:1170:ddb2:1::9", "fdab:1170:ddb2:1::1", 22, socket.AF_INET6), "open")
+use("peer0", "fd00:db8:1::9/64")
+check("LAN IPv6 SSH", connect("fd00:db8:1::9", "fd00:db8:1::1", 22, socket.AF_INET6), "open")
 
 use("peer1", "100.64.10.2/24")
 check("Tailscale SSH", connect("100.64.10.2", "100.64.10.1", 22), "open")
