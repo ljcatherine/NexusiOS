@@ -26,7 +26,7 @@ different path. Unknown keys stop the build.
 | `NexusGatewayHost` | string | Hostname of your Access-protected Worker, e.g. `nexus-gateway.example.workers.dev`. Enables relay SSH endpoints and the default Minecraft panel URL. |
 | `NexusAccessIssuer` | string | Cloudflare Access team issuer, e.g. `https://your-team.cloudflareaccess.com`. |
 | `NexusAccessClientID` | string | Public Managed OAuth client ID from `scripts/register-cloudflare-access-client.py`. It is an identifier, not a secret. |
-| `NexusDefaultAIEndpoint` | string | Prefilled base URL for a new PS5LM Plus connection, e.g. `http://192.168.1.50:8081/v1`. |
+| `NexusDefaultAIEndpoint` | string | Prefilled base URL for a new NexusAI connection, e.g. `http://192.168.1.50:8081/v1`. |
 | `NexusRelayDevices` | array of `{name, username, target}` | Devices suggested on first launch, each routed through the Worker to the gateway alias `target` (must exist in `NEXUS_SSH_TARGETS_JSON`). A device whose SSH username matches an entry is also offered the relay. |
 
 When `NexusGatewayHost`, `NexusAccessIssuer` and `NexusAccessClientID` are all set,

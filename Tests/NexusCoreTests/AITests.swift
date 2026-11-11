@@ -1408,9 +1408,9 @@ final class AITests: XCTestCase {
 
     func testDeepSearchPlannerBoundsDeduplicatesAndFallsBackToOneQuery() throws {
         let planned = try AIAPIClient.parseWebSearchDecision(
-            #"{"search":true,"queries":["latest Qwen release","PS5LM Plus compatibility","latest qwen release","un\nsafe"]}"#,
+            #"{"search":true,"queries":["latest Qwen release","NexusAI compatibility","latest qwen release","un\nsafe"]}"#,
             forceSearch: false, fallbackQuery: "unused", maxQueries: 3)
-        XCTAssertEqual(planned.queries, ["latest Qwen release", "PS5LM Plus compatibility"])
+        XCTAssertEqual(planned.queries, ["latest Qwen release", "NexusAI compatibility"])
         XCTAssertEqual(planned.query, "latest Qwen release")
 
         let fallback = try AIAPIClient.parseWebSearchDecision(#"{"search":true,"queries":[]}"#,
@@ -1948,7 +1948,7 @@ final class AITests: XCTestCase {
         configuration.protocolClasses = [AIHTTPStubURLProtocol.self]
         let session = URLSession(configuration: configuration)
         defer { session.invalidateAndCancel() }
-        let connection = AIConnection(name: "PS5LM Plus", provider: .ps5lmPlus,
+        let connection = AIConnection(name: "NexusAI", provider: .ps5lmPlus,
             baseURL: "https://\(host)/v1")
         let messages = [AIChatMessage(role: .user, content: "hello")]
         let client = AIAPIClient()

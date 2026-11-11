@@ -243,7 +243,7 @@ final class AIConnectionsStore {
             }
         }
         if connections.isEmpty && !demoMode {
-            connections = [AIConnection(name: "PS5LM Plus", provider: .ps5lmPlus,
+            connections = [AIConnection(name: "NexusAI", provider: .ps5lmPlus,
                 baseURL: Self.defaultPS5Endpoint, defaultModel: AIConnection.ps5LMPlusDefaultModel, autoConnect: false)]
         } else if !demoMode {
             for index in connections.indices where connections[index].provider == .ps5lmPlus &&
@@ -2257,7 +2257,7 @@ struct AIConnectionsView: View {
             }
         }
         .sheet(isPresented: $showingNew) {
-            NavigationStack { AIConnectionEditor(ai: ai, devices: devices, connection: AIConnection(name: "PS5LM Plus",
+            NavigationStack { AIConnectionEditor(ai: ai, devices: devices, connection: AIConnection(name: "NexusAI",
                 provider: .ps5lmPlus, baseURL: AIConnectionsStore.ps5EndpointForNewConnection, defaultModel: AIConnection.ps5LMPlusDefaultModel)) }
         }
         .sheet(item: $editing) { connection in
@@ -2347,7 +2347,7 @@ private struct AIConnectionEditor: View {
                         .keyboardType(.URL).autocorrectionDisabled()
                 }
                 if !connection.provider.isOnDevice && !lanEndpoints.isEmpty {
-                    Menu("Use saved device for PS5LM Plus", systemImage: "point.3.connected.trianglepath.dotted") {
+                    Menu("Use saved device for NexusAI", systemImage: "point.3.connected.trianglepath.dotted") {
                         ForEach(Array(lanEndpoints.enumerated()), id: \.offset) { entry in
                             let item = entry.element
                             Button("\(item.device.name) · \(item.endpoint.host)") {
@@ -2356,7 +2356,7 @@ private struct AIConnectionEditor: View {
                                     connection.provider = .ps5lmPlus
                                     connection.baseURL = url.absoluteString
                                     if connection.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                        connection.name = "PS5LM Plus"
+                                        connection.name = "NexusAI"
                                     }
                                     status = "Using the selected saved LAN address on port 8081."
                                 } catch {

@@ -26,9 +26,9 @@ final class NexusUITests: XCTestCase {
             NSPredicate(format: "label BEGINSWITH %@", "AI connection:")).firstMatch
         XCTAssertTrue(selector.waitForExistence(timeout: 10), "AI connection menu is missing")
         selector.tap()
-        let ps5 = app.buttons["PS5LM Plus"]
+        let ps5 = app.buttons["NexusAI"]
         guard ps5.waitForExistence(timeout: 3) else {
-            throw XCTSkip("A PS5LM Plus connection is required for offline controller UI acceptance")
+            throw XCTSkip("A NexusAI connection is required for offline controller UI acceptance")
         }
         ps5.tap()
 

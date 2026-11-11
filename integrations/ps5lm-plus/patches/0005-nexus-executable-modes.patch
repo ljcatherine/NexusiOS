@@ -1,7 +1,0 @@
-diff --git a/scripts/build-app.sh b/scripts/build-app.sh
---- a/scripts/build-app.sh
-+++ b/scripts/build-app.sh
-@@ -221,2 +221,3 @@
- "$tool" self --inspect --file "$app/eboot.bin" > /dev/null
-+chmod 0755 "$app/eboot.bin" "$app/sce_module/libc.prx"
- echo "build-app: $app ($(stat -c %s "$app/eboot.bin") bytes)"

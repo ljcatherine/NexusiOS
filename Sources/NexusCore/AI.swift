@@ -22,7 +22,7 @@ public enum AIProvider: String, Codable, CaseIterable, Identifiable, Sendable {
     public var id: String { rawValue }
     public var title: String {
         switch self {
-        case .ps5lmPlus: "PS5LM Plus"
+        case .ps5lmPlus: "NexusAI"
         case .ollama: "Ollama"
         case .openWebUI: "Open WebUI API"
         case .customOpenAICompatible: "Custom OpenAI-compatible"
@@ -878,8 +878,8 @@ private extension Data {
 public struct AIConnection: Codable, Identifiable, Equatable, Sendable {
     public static let ps5LMPlusDefaultModel = "/data/PS5LM/models/Qwen3.5-9B-The-Defiant-Fable-Uncnr-Heretic-NEO-MAX-MTP-Q6_K.gguf"
 
-    /// Builds a local PS5LM Plus URL from an explicitly saved LAN endpoint.
-    /// The saved endpoint can replace the editable PS5LM Plus default.
+    /// Builds a local NexusAI URL from an explicitly saved LAN endpoint.
+    /// The saved endpoint can replace the editable NexusAI default.
     public static func ps5LMPlusURL(for endpoint: Endpoint) throws -> URL {
         try endpoint.validate()
         guard endpoint.kind == .lan, !endpoint.isExampleAddress else {
@@ -891,7 +891,7 @@ public struct AIConnection: Codable, Identifiable, Equatable, Sendable {
         components.port = 8081
         components.path = "/v1"
         guard let value = components.string else { throw AIConnectionError.invalidAddress }
-        return try AIConnection(name: "PS5LM Plus", provider: .ps5lmPlus, baseURL: value).validatedBaseURL()
+        return try AIConnection(name: "NexusAI", provider: .ps5lmPlus, baseURL: value).validatedBaseURL()
     }
 
     public var id: UUID
@@ -945,7 +945,7 @@ public struct AIConnection: Codable, Identifiable, Equatable, Sendable {
     }
 
     public var effectiveContextWindowTokens: Int {
-        // PS5LM Plus commonly runs with a 64k context on this hardware. The
+        // NexusAI commonly runs with a 64k context on this hardware. The
         // server-reported value takes precedence when Nexus can discover it.
         contextWindowTokens ?? (provider.isOnDevice ? 4_096 : (provider == .ps5lmPlus ? 65_536 : 8_192))
     }

@@ -10,7 +10,7 @@ Nexus (iPhone)
   └─ HTTPS + Cloudflare Access (Managed OAuth, PKCE)
        └─ Cloudflare Worker  (cloudflare/worker.mjs, fixed routes only)
             └─ Workers VPC → cloudflared tunnel → gateway on 127.0.0.1:8787
-                 ├─ AI upstream (PS5LM Plus or another OpenAI-compatible server)
+                 ├─ AI upstream (NexusAI or another OpenAI-compatible server)
                  ├─ SSH relay to fixed aliases (server-held key, strict known_hosts)
                  ├─ optional web search (Brave or SearXNG)
                  ├─ optional encrypted conversation sync
@@ -142,6 +142,6 @@ Nexus has no RCON implementation.
 
 - [`agent-orchestrator/`](../agent-orchestrator) runs agent tasks next to the gateway.
 - [`workspace-agent/`](../workspace-agent) is a read-only workspace bridge per host.
-- [`integrations/ps5lm-plus`](../integrations/ps5lm-plus) is the inference server fork.
+- [NexusAI](https://github.com/ljcatherine/NexusAI) is the PS5 inference server.
 
 Each has its own README.

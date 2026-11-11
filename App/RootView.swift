@@ -670,7 +670,7 @@ struct SettingsView: View {
             } header: {
                 settingsHeader("AI")
             } footer: {
-                Text("Connect to PS5LM Plus, Ollama, Open WebUI's API, or another compatible model service. The chat is native SwiftUI and sends directly to your configured service.")
+                Text("Connect to NexusAI, Ollama, Open WebUI's API, or another compatible model service. The chat is native SwiftUI and sends directly to your configured service.")
             }
             if !store.isDemoMode, let cloudflareConnection = aiConnections.configuredCloudflareGatewayConnection {
                 Section {

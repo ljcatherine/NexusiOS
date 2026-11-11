@@ -31,7 +31,7 @@ public struct DeploymentConfiguration: Sendable, Equatable {
     public var accessIssuer: String?
     /// Public Managed OAuth client ID. It is an identifier, not a secret.
     public var accessClientID: String?
-    /// Prefilled base URL for a new PS5LM Plus connection.
+    /// Prefilled base URL for a new NexusAI connection.
     public var defaultAIEndpoint: String?
     /// Devices suggested on first launch, each routed through the Worker relay.
     public var relayDevices: [RelayDevice]
