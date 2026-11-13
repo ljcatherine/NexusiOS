@@ -53,4 +53,4 @@ TLS errors on the server; Nexus has no certificate-validation bypass. For privat
 addresses, test from the same LAN or a connected tailnet, and don't port-forward the
 model server.
 
-**Gateway returns 403.** See [Diagnosing 403s](GATEWAY.md#diagnosing-403s).
+**Gateway returns 403.** See [Diagnosing 403s](https://github.com/ljcatherine/NexusBackend/blob/main/docs/GATEWAY.md#diagnosing-403s).

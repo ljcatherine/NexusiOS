@@ -32,8 +32,6 @@ id_dsa
 /Certificates/
 /payloads/
 /local/
-/cloudflare/wrangler.jsonc
-/cloudflare/wrangler.local.jsonc
 /Config/Nexus-Info.plist
 __pycache__/
 

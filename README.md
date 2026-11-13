@@ -29,13 +29,13 @@ A native SwiftUI app for iPhone and iPad: SSH terminals, files, services, host h
 | **SSH and terminal** | Saved device profiles with ordered LAN/Tailscale endpoints. OpenSSH Ed25519 key import and generation. Credentials and host pins in the iOS Keychain, explicit first-use fingerprint confirmation, changed-key rejection and guarded rotation. Interactive PTY tabs, reconnect, optional tmux, keyboard controls and terminal search. |
 | **Overview and monitoring** | Linux CPU, memory, storage, uptime, load and GPU snapshots. History and rates derived only from matching samples, optional active-screen refresh, and opt-in local low-resource notifications. No fabricated telemetry. |
 | **Files** | Remote SFTP and app-local browsing, bounded previews and edits, multi-file and recursive transfers with progress and cancellation, path safeguards and explicit conflict handling. |
-| **Services** | systemd controls and logs, guarded NixOS dry-build/switch, network/DNS/TCP diagnostics, confirmed command recipes, a launcher for a self-hosted Minecraft panel, and the **One Time Passcode** that unlocks Nexus Desktop on Windows. |
+| **Services** | systemd controls and logs, guarded NixOS dry-build/switch, network/DNS/TCP diagnostics, confirmed command recipes, and the **One Time Passcode** that unlocks Nexus Desktop on Windows. |
 | **AI** | Native chat for NexusAI/OpenAI-compatible APIs, Open WebUI, Ollama, and Apple Intelligence on eligible iOS 26+ devices. Streaming, response profiles, protected conversations, text/CSV/TSV/XLSX/PDF and up to three image attachments, on-device OCR for scanned PDFs, opt-in local knowledge, a secret warning for outgoing text, approved sharing of cached host snapshots, and optional web research through the gateway. |
 
-Minecraft actions go through the existing panel; Nexus has no separate RCON implementation. Legacy XLS workbooks are unsupported, and XLSX extraction reads bounded cell values without evaluating formulas.
+Legacy XLS workbooks are unsupported, and XLSX extraction reads bounded cell values without evaluating formulas.
 
 > [!NOTE]
-> The Cloudflare gateway, SSH relay and gateway-backed AI features need your own deployment; see [Gateway and Cloudflare](docs/GATEWAY.md). AI only gets explicitly approved reads of cached host snapshots or service inventories; it never gets a shell or admin tools.
+> The Cloudflare gateway, SSH relay and gateway-backed AI features need your own deployment; see [NexusBackend](https://github.com/ljcatherine/NexusBackend). AI only gets explicitly approved reads of cached host snapshots or service inventories; it never gets a shell or admin tools.
 
 ## Install a build
 
@@ -108,11 +108,9 @@ Device IPAs are built and validated locally with xtool. **Codemagic and GitHub A
 |---|---|
 | [`App/`](App) | The SwiftUI app |
 | [`Sources/NexusCore`](Sources/NexusCore) · [`Sources/NexusSSH`](Sources/NexusSSH) | Core models and logic, SSH transport |
-| [`gateway/`](gateway) · [`cloudflare/`](cloudflare) | AI gateway and Cloudflare Worker |
-| [`agent-orchestrator/`](agent-orchestrator) | Agent orchestrator service next to the gateway |
-| [`workspace-agent/`](workspace-agent) | Read-only workspace bridge for Linux hosts |
-| [`integrations/`](integrations) | [Hermes](integrations/hermes) engine. NexusAI, the PS5 inference app, is in [ljcatherine/NexusAI](https://github.com/ljcatherine/NexusAI) |
-| [`docs/`](docs) | Build, configuration, gateway, security and testing guides |
+| [`docs/`](docs) | Build, configuration, security and testing guides |
+
+The gateway, Cloudflare Worker, agent orchestrator, workspace agent and Hermes engine are in [ljcatherine/NexusBackend](https://github.com/ljcatherine/NexusBackend). NexusAI, the PS5 inference app, is in [ljcatherine/NexusAI](https://github.com/ljcatherine/NexusAI).
 
 Known issues and fixes are in [troubleshooting](docs/TROUBLESHOOTING.md). Report security issues as described in [SECURITY.md](SECURITY.md).
 
