@@ -5,7 +5,7 @@ configuration at all: you add devices and AI connections in the app, and every
 endpoint, username, token and host-key pin you enter stays on the device (tokens,
 keys and pins in the iOS Keychain).
 
-If you run your own gateway (see [Gateway and Cloudflare](GATEWAY.md)), you can bake
+If you run your own gateway (see [Gateway and Cloudflare](https://github.com/ljcatherine/NexusBackend/blob/main/docs/GATEWAY.md) in NexusBackend), you can bake
 a few non-secret values into your build so the app is preconfigured.
 
 ## Build-time values
@@ -23,9 +23,9 @@ different path. Unknown keys stop the build.
 
 | Key | Type | Effect |
 |---|---|---|
-| `NexusGatewayHost` | string | Hostname of your Access-protected Worker, e.g. `nexus-gateway.example.workers.dev`. Enables relay SSH endpoints and the default Minecraft panel URL. |
+| `NexusGatewayHost` | string | Hostname of your Access-protected Worker, e.g. `nexus-gateway.example.workers.dev`. Enables relay SSH endpoints. |
 | `NexusAccessIssuer` | string | Cloudflare Access team issuer, e.g. `https://your-team.cloudflareaccess.com`. |
-| `NexusAccessClientID` | string | Public Managed OAuth client ID from `scripts/register-cloudflare-access-client.py`. It is an identifier, not a secret. |
+| `NexusAccessClientID` | string | Public Managed OAuth client ID from NexusBackend's `scripts/register-cloudflare-access-client.py`. It is an identifier, not a secret. |
 | `NexusDefaultAIEndpoint` | string | Prefilled base URL for a new NexusAI connection, e.g. `http://192.168.1.50:8081/v1`. |
 | `NexusRelayDevices` | array of `{name, username, target}` | Devices suggested on first launch, each routed through the Worker to the gateway alias `target` (must exist in `NEXUS_SSH_TARGETS_JSON`). A device whose SSH username matches an entry is also offered the relay. |
 
@@ -44,10 +44,5 @@ for other people, leave `NexusDefaultAIEndpoint` out.
 
 ## Server-side configuration
 
-| File | Template | Purpose |
-|---|---|---|
-| `local/nexus-gateway.env` or `~/.config/nexus-gateway/nexus.env` | `gateway/.env.example` | Gateway policy, upstreams and relay targets |
-| workspace agent environment | `workspace-agent/.env.example` | Read-only workspace bridge per host |
-| `cloudflare/wrangler.jsonc` | `cloudflare/wrangler.example.jsonc` | Worker name, VPC service binding |
-
-All three real files are git-ignored. Keep them owner-only (`chmod 600`).
+Gateway, workspace agent and Worker configuration live in [NexusBackend](https://github.com/ljcatherine/NexusBackend),
+with an `.example` template for each file.

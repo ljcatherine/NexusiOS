@@ -3,7 +3,6 @@ import NexusCore
 
 struct ServicesHomeView: View {
     @Bindable var store: AppStore
-    var cloudflareAccessLoginHost: String? = nil
 
     var body: some View {
         ScrollView {
@@ -13,11 +12,6 @@ struct ServicesHomeView: View {
                     toolLink("System services", symbol: "gearshape.2", tint: NexusPalette.blue,
                              detail: "Systemd, processes, logs, and confirmed controls") {
                         ServicesView(store: store)
-                    }
-                    NexusGlassDivider()
-                    toolLink("Minecraft panel", symbol: "gamecontroller", tint: NexusPalette.green,
-                             detail: "Open your configured private HTTPS panel") {
-                        MinecraftPanelView(store: store, cloudflareAccessLoginHost: cloudflareAccessLoginHost)
                     }
                     NexusGlassDivider()
                     toolLink("Files", symbol: "folder", tint: NexusPalette.amber,
@@ -83,7 +77,6 @@ struct ServicesHomeView: View {
 
 struct ManagementView: View {
     @Bindable var store: AppStore
-    var cloudflareAccessLoginHost: String? = nil
 
     var body: some View {
         #if NEXUS_DEMO_MODE
@@ -134,16 +127,6 @@ struct ManagementView: View {
                     toolRow("Command recipes", symbol: "text.book.closed",
                         detail: "Preview and confirm saved commands")
                 }
-            }
-
-            Section("Game server") {
-                NavigationLink {
-                    MinecraftPanelView(store: store, cloudflareAccessLoginHost: cloudflareAccessLoginHost)
-                } label: {
-                    toolRow("Minecraft panel", symbol: "gamecontroller",
-                        detail: "Open your privately configured HTTPS panel")
-                }
-                .accessibilityIdentifier("manage.minecraft")
             }
 
             Section {

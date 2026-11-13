@@ -31,12 +31,6 @@ struct RootView: View {
         tab = 1
         terminalPath.append(session.id)
     }
-    private var cloudflareAccessLoginHost: String? {
-        guard let issuer = aiConnections.configuredCloudflareGatewayConnection?.oidcIssuer,
-              let url = URL(string: issuer), url.scheme?.lowercased() == "https",
-              let host = url.host?.lowercased(), host.hasSuffix(".cloudflareaccess.com") else { return nil }
-        return host
-    }
 
     var body: some View {
         TabView(selection: $tab) {
@@ -74,7 +68,7 @@ struct RootView: View {
             NavigationStack { NativeAIChatView(ai: aiConnections, store: store) }
                 .tabItem { Label("AI", systemImage: "sparkles") }.tag(2)
             NavigationStack {
-                ServicesHomeView(store: store, cloudflareAccessLoginHost: cloudflareAccessLoginHost)
+                ServicesHomeView(store: store)
                     .navigationDestination(for: ManagementRoute.self) { route in
                         switch route {
                         case .devices: DevicesView(store: store, onOpen: openTerminal)

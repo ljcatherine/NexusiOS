@@ -75,12 +75,11 @@ installs, signs, or reaches your hosts.
 ```sh
 ./scripts/test-swift.sh           # NexusCore / NexusSSH package tests
 bash scripts/test-openssh.sh      # SSH integration against a disposable OpenSSH container
-(cd gateway && CGO_ENABLED=0 go test ./...)
-(cd workspace-agent && CGO_ENABLED=0 go test ./...)
-(cd cloudflare && node --test worker.test.mjs)
 (cd scripts && python3 -m unittest)
-(cd agent-orchestrator && python3 -m unittest)
 ```
+
+The gateway, Worker and server-side services have their own tests in
+[NexusBackend](https://github.com/ljcatherine/NexusBackend).
 
 On NixOS, the Swift scripts run inside the official `swift:6.4.1-noble` Docker
 image, because the host sysroot doesn't match the Swiftly toolchain. They compile

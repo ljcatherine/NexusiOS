@@ -14,9 +14,6 @@ struct CachedServiceInventory: Equatable {
 
 @MainActor @Observable
 final class AppStore {
-    private static var defaultCloudflareMinecraftPanelURL: String? {
-        DeploymentConfiguration.current.gatewayOrigin.map { "\($0)/" }
-    }
     var devices: [Device] = []
     var sessions: [TerminalSession] = []
     var commandRecipes: [CommandRecipe] = []
@@ -210,44 +207,6 @@ final class AppStore {
             services: Array(services.prefix(100)))
     }
 
-    func minecraftPanelURL() throws -> URL? {
-        guard !isDemoMode else { return nil }
-        guard let data = try secrets.read("minecraft-panel-url"),
-              let value = String(data: data, encoding: .utf8) else {
-            guard let defaultURL = Self.defaultCloudflareMinecraftPanelURL else { return nil }
-            return try Self.validatedMinecraftPanelURL(defaultURL)
-        }
-        let savedURL = try Self.validatedMinecraftPanelURL(value)
-        if savedURL.host?.lowercased().hasSuffix(".ts.net") == true,
-           let defaultURL = Self.defaultCloudflareMinecraftPanelURL {
-            let migrated = try Self.validatedMinecraftPanelURL(defaultURL)
-            try secrets.write(Data(migrated.absoluteString.utf8), account: "minecraft-panel-url")
-            return migrated
-        }
-        return savedURL
-    }
-
-    func saveMinecraftPanelURL(_ value: String) throws {
-        guard !isDemoMode else { throw DeviceConfigurationImportError.demoModeReadOnly }
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmed.isEmpty {
-            try secrets.delete("minecraft-panel-url")
-            return
-        }
-        let url = try Self.validatedMinecraftPanelURL(trimmed)
-        guard let data = url.absoluteString.data(using: .utf8) else {
-            throw MinecraftPanelConfigurationError.invalidURL
-        }
-        try secrets.write(data, account: "minecraft-panel-url")
-    }
-
-    private static func validatedMinecraftPanelURL(_ value: String) throws -> URL {
-        do {
-            return try MinecraftPanelAddress(value).url
-        } catch {
-            throw MinecraftPanelConfigurationError.invalidURL
-        }
-    }
     private func pruneMetricsHistory(for device: Device) {
         let existing = metricsHistory[device.id] ?? []
         let matching = existing.filter { $0.belongs(to: device) }
@@ -802,14 +761,6 @@ private enum DeviceSaveError: LocalizedError {
         case .rollbackFailed(let saveError, let rollbackErrors):
             return "Device settings could not be saved (\(saveError)), and Keychain rollback was incomplete: \(rollbackErrors.joined(separator: "; ")). Reopen this device's settings and verify its profile, credential, and host-key trust."
         }
-    }
-}
-
-private enum MinecraftPanelConfigurationError: LocalizedError {
-    case invalidURL
-
-    var errorDescription: String? {
-        "Enter a valid HTTPS panel address without a username, password, query, or fragment."
     }
 }
 

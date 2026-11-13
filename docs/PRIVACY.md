@@ -23,12 +23,10 @@ There's no developer-operated relay and no background polling.
 
 - **SSH/SFTP** sends your commands, terminal input and file operations to the host
   you chose.
-- **Minecraft panel** loads the HTTPS panel address you set (stored in the Keychain,
-  device-only) in WebKit, which keeps the panel's session.
 - **Tailscale** carries traffic when you pick a Tailscale endpoint, under your
   Tailscale configuration and terms.
 - **Your gateway**, if you deploy one, sees the requests routed through it. See
-  [Gateway and Cloudflare](GATEWAY.md).
+  [Gateway and Cloudflare](https://github.com/ljcatherine/NexusBackend/blob/main/docs/GATEWAY.md).
 
 ## AI
 

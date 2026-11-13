@@ -32,7 +32,7 @@ establish any of the items below.
   models, and confirm a new request uses the selected one.
 - Send a prompt, stop a long response, and start a new conversation. Errors and
   unavailable models are shown clearly.
-- In Services, inspect services and the Minecraft panel. Only test state-changing
+- In Services, inspect services. Only test state-changing
   actions deliberately, after reading their confirmation.
 
 ## Reporting
