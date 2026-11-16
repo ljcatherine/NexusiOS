@@ -33,6 +33,11 @@ struct ServicesHomeView: View {
                              detail: "4-digit code that unlocks Nexus Desktop on Windows") {
                         OneTimePasscodeView(store: store)
                     }
+                    NexusGlassDivider()
+                    toolLink("Nexus sign-in", symbol: "person.badge.key", tint: NexusPalette.blue,
+                             detail: "6-digit code for signing in at auth.liamjc.dev") {
+                        SignInPasscodeView(store: store)
+                    }
                 }
                 NexusCard {
                     Label("SSH host keys stay verified. Service and configuration changes keep their confirmation steps.",

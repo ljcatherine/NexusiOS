@@ -30,6 +30,8 @@
 	<array>
 		<string>_ssh._tcp</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Scan the QR code from auth.liamjc.dev to set up your Nexus sign-in code.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock your saved infrastructure credentials and terminal sessions.</string>
 	<key>UIApplicationSceneManifest</key>
