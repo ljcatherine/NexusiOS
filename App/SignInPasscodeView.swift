@@ -1,4 +1,6 @@
 import SwiftUI
+import UIKit
+import UniformTypeIdentifiers
 import NexusCore
 #if canImport(VisionKit) && os(iOS)
 import VisionKit
@@ -40,7 +42,7 @@ struct SignInPasscodeView: View {
                 } header: {
                     Text(passcode.account.isEmpty ? "Nexus sign-in" : passcode.account)
                 } footer: {
-                    Text("Enter this code at auth.liamjc.dev after your password. Never type it anywhere else: Nexus will never ask for it by message or email.")
+                    Text("Enter this code at auth.liamjc.dev after your password. When you sign in from Nexus, the current code is kept on the clipboard (this iPhone only) while the sign-in page is open, so you can paste it; it is cleared afterwards. Never type it anywhere else: Nexus will never ask for it by message or email.")
                 }
                 Section {
                     Button("Remove sign-in code", systemImage: "trash", role: .destructive) { confirmRemove = true }
@@ -169,3 +171,53 @@ private struct QRCodeScanner: UIViewControllerRepresentable {
     }
 }
 #endif
+
+/// While a Nexus web sign-in sheet is open, it covers the app, so the code on the
+/// Nexus sign-in screen can't be read. This keeps the current code on the clipboard
+/// (local to this device, never Universal Clipboard, expiring) and refreshes it each
+/// period, then clears it when the sign-in ends if nothing else was copied meanwhile.
+@MainActor
+final class SignInCodeClipboard {
+    private let passcode: SignInPasscode
+    private var refresh: Task<Void, Never>?
+    private var ownedChangeCount: Int?
+
+    /// Nil when no sign-in code is set up on this device.
+    init?(secrets: any SecretStore) {
+        guard let data = try? secrets.read(SignInPasscode.keychainAccount),
+              let passcode = try? JSONDecoder().decode(SignInPasscode.self, from: data) else { return nil }
+        self.passcode = passcode
+    }
+
+    func start() {
+        copy()
+        refresh = Task { @MainActor [weak self] in
+            while let self, !Task.isCancelled {
+                let wait = Double(self.passcode.secondsRemaining(at: .now))
+                try? await Task.sleep(for: .seconds(wait))
+                guard !Task.isCancelled else { return }
+                // Stop refreshing once something else has been copied.
+                guard UIPasteboard.general.changeCount == self.ownedChangeCount else { return }
+                self.copy()
+            }
+        }
+    }
+
+    func stop() {
+        refresh?.cancel()
+        refresh = nil
+        if UIPasteboard.general.changeCount == ownedChangeCount {
+            UIPasteboard.general.items = []
+        }
+        ownedChangeCount = nil
+    }
+
+    private func copy() {
+        let now = Date()
+        // Valid until the end of this period, plus one period of server look-around.
+        let expiry = now.addingTimeInterval(Double(passcode.secondsRemaining(at: now) + passcode.period))
+        UIPasteboard.general.setItems([[UTType.utf8PlainText.identifier: passcode.code(at: now)]],
+                                      options: [.localOnly: true, .expirationDate: expiry])
+        ownedChangeCount = UIPasteboard.general.changeCount
+    }
+}

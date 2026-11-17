@@ -1409,6 +1409,10 @@ final class AIConnectionsStore {
         let operationEpoch = gatewaySessionEpochs.beginOperation(for: connection.id)
         let configuration = try Self.oidcConfiguration(issuer: issuer, clientID: clientID, audience: audience,
             managedAccessOAuth: connection.managedAccessOAuth ?? false)
+        // The sign-in sheet covers the app, so keep the Nexus sign-in code on the clipboard meanwhile.
+        let signInCode = SignInCodeClipboard(secrets: secrets)
+        signInCode?.start()
+        defer { signInCode?.stop() }
         let tokens = try await NativeOIDCSignIn.shared.signIn(configuration: configuration)
         guard gatewaySessionEpochs.isCurrent(operationEpoch, for: connection.id) else {
             throw AIStoreError.gatewaySessionChanged
